@@ -16,6 +16,11 @@ Just for fun. :P
 
 **Note**: The Quarkus application is automatically started up and stopped when the VS Code extension is activated and deactivated, respectively. Also, the building process takes care of embedding the Quarkus application into the VS Code extension.
 
+## Requirements
+
+- [Maven](https://maven.apache.org/) 3.6.2 or later
+- [Java](https://openjdk.java.net/install/) 11 or later
+
 ## Running the example
 
 - Open this example in VS Code 1.43+
