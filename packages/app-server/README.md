@@ -1,0 +1,1 @@
+Quarkus App with an endpoint to classify images
