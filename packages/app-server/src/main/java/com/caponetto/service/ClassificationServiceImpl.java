@@ -17,6 +17,7 @@ import ai.djl.modality.cv.translator.ImageClassificationTranslator;
 import ai.djl.repository.zoo.Criteria;
 import ai.djl.repository.zoo.ModelZoo;
 import ai.djl.repository.zoo.ZooModel;
+import ai.djl.repository.zoo.Criteria.Builder;
 import ai.djl.training.util.ProgressBar;
 import ai.djl.translate.TranslateException;
 import ai.djl.translate.Translator;
@@ -27,32 +28,34 @@ public class ClassificationServiceImpl implements ClassificationService {
     private static final float[] MEAN = { 103.939f, 116.779f, 123.68f };
     private static final float[] STD = { 1f, 1f, 1f };
     private static final String TENSORFLOW_ENGINE = "TensorFlow";
-    private static final String MODEL = "resnet";
+    private static final String MODEL_NAME = "resnet";
 
     @Override
     public Classifications.Classification classify(final String path)
             throws TranslateException, IOException, ModelException {
         final Image image = ImageFactory.getInstance().fromFile(Path.of(path));
 
-        final Criteria<Image, Classifications> criteria = resolveCriteria();
-
-        try (ZooModel<Image, Classifications> model = ModelZoo.loadModel(criteria);
+        try (ZooModel<Image, Classifications> model = ModelZoo.loadModel(buildCriteria());
                 Predictor<Image, Classifications> predictor = model.newPredictor()) {
-            final Classifications result = predictor.predict(image);
-            return result.best();
+            return predictor.predict(image).best();
         }
     }
 
-    private Criteria<Image, Classifications> resolveCriteria() {
+    private Criteria<Image, Classifications> buildCriteria() {
+        final Builder<Image, Classifications> criteriaBuilder = Criteria.builder()
+                .setTypes(Image.class, Classifications.class)
+                .optArtifactId(MODEL_NAME)
+                .optProgress(new ProgressBar());
+
         if (TENSORFLOW_ENGINE.equals(Engine.getInstance().getEngineName())) {
             final Translator<Image, Classifications> translator = ImageClassificationTranslator.builder()
-                    .addTransform(new Resize(224)).addTransform(new Normalize(MEAN, STD)).build();
+                    .addTransform(new Resize(224))
+                    .addTransform(new Normalize(MEAN, STD))
+                    .build();
 
-            return Criteria.builder().setTypes(Image.class, Classifications.class).optArtifactId(MODEL)
-                    .optTranslator(translator).optProgress(new ProgressBar()).build();
+            criteriaBuilder.optTranslator(translator);
         }
 
-        return Criteria.builder().setTypes(Image.class, Classifications.class).optArtifactId(MODEL)
-                .optProgress(new ProgressBar()).build();
+        return criteriaBuilder.build();
     }
 }
