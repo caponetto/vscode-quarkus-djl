@@ -1,6 +1,8 @@
 name: CI
 
 on:
+  schedule:
+    - cron: "0 9 * * *"
   push:
     branches: [master]
   pull_request:
@@ -9,6 +11,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
 
     steps:
       - uses: actions/checkout@v2
