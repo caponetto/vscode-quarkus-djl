@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: "**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+
+      - name: Output version
+        id: version
+        run: |
+          echo ::set-output name=version::$(node -e "console.log(require('./lerna.json').version);")
+        shell: bash
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.16.3"
+
+      - name: Setup Yarn
+        run: npm install -g yarn@1.19.1
+
+      - name: Download dependencies
+        run: yarn run init
+
+      - name: Check yarn.lock md5
+        id: check-yarn-lock-md5
+        run: |
+          git diff yarn.lock;
+          [ "0" == "$(git diff yarn.lock | wc -l)" ]
+        shell: bash
+
+      - name: "Build :: prod and pack"
+        run: yarn run build:prod
+
+      - name: Upload VS Code Extension
+        uses: actions/upload-artifact@v2
+        with:
+          name: image_classifier_vscode_extension
+          path: packages/vscode-extension/dist/image_classifier_vscode_extension_${{ steps.version.outputs.version }}.vsix
