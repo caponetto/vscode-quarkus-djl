@@ -1,3 +1,5 @@
+![CI](https://github.com/caponetto/vscode-quarkus-djl/workflows/CI/badge.svg)
+
 # Image classification on VS Code
 
 <p align="center">
