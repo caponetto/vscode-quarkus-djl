@@ -1,4 +1,7 @@
-![CI](https://github.com/caponetto/vscode-quarkus-djl/workflows/CI/badge.svg)
+![CI](https://github.com/caponetto/vscode-quarkus-djl/workflows/CI/badge.svg) 
+![CodeQL](https://github.com/caponetto/vscode-quarkus-djl/workflows/CodeQL/badge.svg)
+[![GitHub Stars](https://img.shields.io/github/stars/caponetto/vscode-quarkus-djl.svg)](https://github.com/caponetto/vscode-quarkus-djl/stargazers)
+[![License](https://img.shields.io/github/license/caponetto/vscode-quarkus-djl.svg)](https://github.com/caponetto/vscode-quarkus-djl/blob/main/LICENSE)
 
 # Image classification on VS Code with Quarkus and DJL
 
