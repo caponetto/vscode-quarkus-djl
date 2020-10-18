@@ -28,7 +28,12 @@ jobs:
         languages: ${{ matrix.language }}
 
     - name: Autobuild
+      if: matrix.language == 'javascript'
       uses: github/codeql-action/autobuild@v1
+    
+    - name: Build Java code
+      if: matrix.language == 'java'
+      run: mvn -B package --file packages/app-server/pom.xml
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
