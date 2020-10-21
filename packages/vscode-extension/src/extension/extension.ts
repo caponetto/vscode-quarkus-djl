@@ -3,7 +3,8 @@ import { DefaultHttpBridge } from "@kogito-tooling/backend/dist/http-bridge";
 import { QuarkusLocalServer } from "@kogito-tooling/backend/dist/node";
 import * as path from "path";
 import * as vscode from "vscode";
-import { ImageClassifierService, SERVICE_ID } from "../service/ImageClassifierService";
+import { ImageDescriptor } from "../model/ImageDescriptor";
+import { ImageService, SERVICE_ID } from "../service/ImageService";
 
 let backendProxy: BackendProxy;
 
@@ -12,7 +13,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const backendManager = new BackendManagerService({
     bridge: new DefaultHttpBridge(),
     localHttpServer: localServer,
-    lazyServices: [new ImageClassifierService()]
+    lazyServices: [new ImageService()]
   });
 
   await backendManager.start();
@@ -34,7 +35,7 @@ export function deactivate(): void {
 
 async function runClassifyCommand(uri: vscode.Uri) {
   try {
-    const response = await backendProxy.withCapability(SERVICE_ID, async (capability: ImageClassifierService) =>
+    const response = await backendProxy.withCapability(SERVICE_ID, async (capability: ImageService) =>
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Window,
@@ -49,7 +50,10 @@ async function runClassifyCommand(uri: vscode.Uri) {
       return;
     }
 
-    vscode.window.showInformationMessage(`Best match: ${response.body!.className} (${response.body!.probability}%)`);
+    const imageDescriptor = response.body as ImageDescriptor;
+    vscode.window.showInformationMessage(
+      `Best match: ${imageDescriptor.items[0].className} (${imageDescriptor.items[0].probability}%)`
+    );
   } catch (e) {
     vscode.window.showErrorMessage(e);
   }

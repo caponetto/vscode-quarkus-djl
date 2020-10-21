@@ -1,5 +1,6 @@
 package com.caponetto.resource;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -9,35 +10,51 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.caponetto.model.ClassifyRequest;
-import com.caponetto.model.ClassifyResponse;
-import com.caponetto.service.ClassificationService;
-
-import org.apache.commons.imaging.ImageReadException;
+import javax.ws.rs.core.Response.Status;
 
 import ai.djl.ModelException;
-import ai.djl.modality.Classifications;
 import ai.djl.translate.TranslateException;
+import com.caponetto.model.ImageRequest;
+import com.caponetto.service.ImageService;
+import org.apache.commons.imaging.ImageReadException;
 
 @Path("/")
 public class ImageResource {
 
+    public static final String CLASSIFY_PATH = "/classify";
+    public static final String DETECT_PATH = "/detect";
+
     @Inject
-    ClassificationService service;
+    ImageService service;
 
     @POST
-    @Path("/classify")
+    @Path(CLASSIFY_PATH)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response classify(final ClassifyRequest request) {
+    public Response classify(final ImageRequest request) {
+        if (!new File(request.getPath()).exists()) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+
         try {
-            final Classifications.Classification result = service.classify(request.getPath());
-            return Response
-                    .ok(new ClassifyResponse(result.getClassName().substring(result.getClassName().indexOf(" ") + 1),
-                            (int) (result.getProbability() * 100)))
-                    .build();
+            return Response.ok(service.classify(request.getPath(), request.getTopK(), request.getThreshold())).build();
         } catch (TranslateException | IOException | ModelException | ImageReadException e) {
+            return Response.serverError().build();
+        }
+    }
+
+    @POST
+    @Path(DETECT_PATH)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response detect(final ImageRequest request) {
+        if (!new File(request.getPath()).exists()) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+
+        try {
+            return Response.ok(service.detect(request.getPath(), request.getTopK(), request.getThreshold())).build();
+        } catch (TranslateException | IOException | ModelException e) {
             return Response.serverError().build();
         }
     }
