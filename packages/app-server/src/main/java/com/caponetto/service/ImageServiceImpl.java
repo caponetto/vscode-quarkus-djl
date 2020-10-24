@@ -2,6 +2,7 @@ package com.caponetto.service;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,11 +32,12 @@ import ai.djl.translate.Translator;
 import com.caponetto.model.BoundingBox;
 import com.caponetto.model.ImageDescriptor;
 import com.caponetto.model.ImageItem;
+import com.caponetto.utils.ImageUtils;
 
 @ApplicationScoped
 public class ImageServiceImpl implements ImageService {
 
-    private static final int DEFAULT_TOP_K = 1;
+    private static final int DEFAULT_TOP_K = 10;
     private static final int DEFAULT_THRESHOLD = 50;
     private static final int RESIZE_DIM = 224;
     private static final float[] MEAN = {103.939f, 116.779f, 123.68f};
@@ -48,7 +50,8 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDescriptor classify(final String path, int topK, int threshold)
             throws TranslateException, IOException, ModelException {
-        final Image image = ImageFactory.getInstance().fromFile(Path.of(path));
+        final Path originalPath = Paths.get(path);
+        final Image image = ImageFactory.getInstance().fromFile(originalPath);
         int resolvedTopK = resolveTopK(topK);
         float resolvedThreshold = resolveThreshold(threshold);
 
@@ -69,21 +72,24 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageDescriptor detect(final String path, int topK, int threshold)
             throws TranslateException, IOException, ModelException {
-        final Image image = ImageFactory.getInstance().fromFile(Path.of(path));
+        final Path originalPath = Paths.get(path);
+        final Image image = ImageFactory.getInstance().fromFile(originalPath);
         int resolvedTopK = resolveTopK(topK);
         float resolvedThreshold = resolveThreshold(threshold);
 
         try (ZooModel<Image, DetectedObjects> model = ModelZoo.loadModel(buildCriteriaForDetector());
              Predictor<Image, DetectedObjects> predictor = model.newPredictor()) {
-            final List<ImageItem> items = predictor
-                    .predict(image)
+            final DetectedObjects detections = predictor.predict(image);
+            final List<ImageItem> items = detections
                     .topK(resolvedTopK)
                     .stream()
                     .filter(item -> item.getProbability() >= resolvedThreshold)
                     .map(item -> resolveItem(image, item))
                     .sorted(Comparator.comparing(ImageItem::getProbability).reversed())
                     .collect(Collectors.toList());
-            return new ImageDescriptor(path, items);
+
+            final Path outputPath = ImageUtils.drawBoundingBoxes(originalPath, items);
+            return new ImageDescriptor(outputPath.toString(), items);
         }
     }
 

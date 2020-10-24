@@ -1,6 +1,6 @@
 {
   "name": "vscode-quarkus-dji-extension",
-  "description": "Image classifier VS Code extension",
+  "description": "Image services VS Code extension",
   "version": "0.0.1",
   "license": "Apache-2.0",
   "publisher": "caponetto",
@@ -14,20 +14,39 @@
     "commands": [
       {
         "command": "extension.command.classify",
-        "title": "Classify"
+        "title": "Classify",
+        "enablement": "serverUp",
+        "icon": "$(output)",
+        "category": "Image services"
+      },
+      {
+        "command": "extension.command.detect",
+        "title": "Detect Objects",
+        "enablement": "serverUp",
+        "icon": "$(jersey)",
+        "category": "Image services"
       }
     ],
     "menus": {
       "commandPalette": [
         {
-          "when": "serverUp && resourceExtname =~ /.jpg|.jpeg|.png/",
+          "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
           "command": "extension.command.classify"
+        },
+        {
+          "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
+          "command": "extension.command.detect"
         }
       ],
       "editor/title": [
         {
-          "when": "serverUp && resourceExtname =~ /.jpg|.jpeg|.png/",
+          "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
           "command": "extension.command.classify",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
+          "command": "extension.command.detect",
           "group": "navigation"
         }
       ]
@@ -39,7 +58,7 @@
     "url": "https://github.com/caponetto/vscode-quarkus-dji.git"
   },
   "scripts": {
-    "package:prod": "cross-var \"vsce package --yarn -o ./dist/image_classifier_vscode_extension_$npm_package_version.vsix\"",
+    "package:prod": "cross-var \"vsce package --yarn -o ./dist/image_services_vscode_extension_$npm_package_version.vsix\"",
     "compile": "webpack",
     "watch": "webpack",
     "build:fast": "rm -rf dist && webpack",
