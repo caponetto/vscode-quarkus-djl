@@ -5,7 +5,7 @@ const common = require("../../webpack.common.config");
 module.exports = [
   merge(common, {
     output: {
-      library: "ImageClassification",
+      library: "ImageServices",
       libraryTarget: "umd",
       umdNamedDefine: true
     },

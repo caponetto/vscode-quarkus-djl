@@ -7,4 +7,10 @@ export interface ImageCapability extends Capability {
    * @param path Absolute path of the image.
    */
   classify(path: string): Promise<CapabilityResponse<ImageDescriptor>>;
+
+  /**
+   * Detect objects on an image in the given path and return a descriptor.
+   * @param path Absolute path of the image.
+   */
+  detect(path: string): Promise<CapabilityResponse<ImageDescriptor>>;
 }

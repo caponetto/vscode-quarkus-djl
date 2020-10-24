@@ -1,15 +1,16 @@
-![CI](https://github.com/caponetto/vscode-quarkus-djl/workflows/CI/badge.svg) 
+![CI](https://github.com/caponetto/vscode-quarkus-djl/workflows/CI/badge.svg)
 ![CodeQL](https://github.com/caponetto/vscode-quarkus-djl/workflows/CodeQL/badge.svg)
 [![GitHub Stars](https://img.shields.io/github/stars/caponetto/vscode-quarkus-djl.svg)](https://github.com/caponetto/vscode-quarkus-djl/stargazers)
 [![License](https://img.shields.io/github/license/caponetto/vscode-quarkus-djl.svg)](https://github.com/caponetto/vscode-quarkus-djl/blob/main/LICENSE)
 
-# Image classification on VS Code with Quarkus and DJL
+# Image services on VS Code with Quarkus and DJL
 
 <p align="center">
-  <a href="documentation/example.gif"><img src="documentation/example.gif" width="700"></a>
+  <a href="documentation/classify.gif"><img src="documentation/classify.gif" width="350"></a>
+  <a href="documentation/detect.gif"><img src="documentation/detect.gif" width="350"></a>
 </p>
 
-Putting together [VS Code extension](https://code.visualstudio.com/api), [Quarkus](https://quarkus.io/), [Deep Java Library](https://djl.ai/), and image classification into a simple project.
+Putting together [VS Code extension](https://code.visualstudio.com/api), [Quarkus](https://quarkus.io/), and [Deep Java Library](https://djl.ai/) into a simple project.
 
 Just for fun. :P
 
@@ -17,7 +18,7 @@ Just for fun. :P
 
 1. `vscode-extension`: Activate the VS Code extension when an image is opened by initializing the Quarkus app (with support of the backend library from [Kogito Tooling](https://github.com/kiegroup/kogito-tooling)).
 
-1. `app-server`: Quarkus application that exposes a REST endpoint for image classification.
+1. `app-server`: Quarkus application that exposes REST endpoints for image services, such as image classification and object detection.
 
 **Note**: The Quarkus application is automatically started up and stopped when the VS Code extension is activated and deactivated, respectively. Also, the build process takes care of embedding the Quarkus application into the VS Code extension.
 
@@ -34,9 +35,9 @@ Just for fun. :P
 - In the terminal, execute `yarn run init && yarn run build:fast`
 - `F5` to start debugging
 
-Open an image file (`*.png`, `*.jpg`, or `*.jpeg`) and click on the `Classify` button.
+Open an image file (`*.png`, `*.jpg`, or `*.jpeg`) and click on the `Classify` or `Detect Objects` button.
 
-VS Code will send a POST request to the embedded Quarkus app, which will classify the image and report back the result.
+VS Code will send a POST request to the embedded Quarkus app, which will perform the required operation on the image and report back the result.
 
 ## Generating the vsix file
 

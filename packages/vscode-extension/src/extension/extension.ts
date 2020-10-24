@@ -1,10 +1,13 @@
-import { BackendManagerService, BackendProxy, CapabilityResponseStatus } from "@kogito-tooling/backend/dist/api";
+import { BackendManagerService, BackendProxy } from "@kogito-tooling/backend/dist/api";
 import { DefaultHttpBridge } from "@kogito-tooling/backend/dist/http-bridge";
 import { QuarkusLocalServer } from "@kogito-tooling/backend/dist/node";
 import * as path from "path";
 import * as vscode from "vscode";
-import { ImageDescriptor } from "../model/ImageDescriptor";
-import { ImageService, SERVICE_ID } from "../service/ImageService";
+import { ImageService } from "../service/ImageService";
+import { checkLocalQuarkusServerAvailability, runClassifyCommand, runDetectCommand } from "./commands";
+
+const CLASSIFY_COMMAND = "extension.command.classify";
+const DETECT_COMMAND = "extension.command.detect";
 
 let backendProxy: BackendProxy;
 
@@ -22,39 +25,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   backendProxy.registerBackendManager(backendManager);
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("extension.command.classify", (uri: vscode.Uri) => runClassifyCommand(uri))
+    vscode.commands.registerCommand(CLASSIFY_COMMAND, (uri: vscode.Uri) => runClassifyCommand(uri, backendProxy)),
+    vscode.commands.registerCommand(DETECT_COMMAND, (uri: vscode.Uri) => runDetectCommand(uri, backendProxy))
   );
 
-  const isServerUp = (await backendManager.getService(localServer.identify())) !== undefined;
-  vscode.commands.executeCommand("setContext", "serverUp", isServerUp);
+  checkLocalQuarkusServerAvailability(backendManager, localServer);
 }
 
 export function deactivate(): void {
   backendProxy?.stopServices();
-}
-
-async function runClassifyCommand(uri: vscode.Uri) {
-  try {
-    const response = await backendProxy.withCapability(SERVICE_ID, async (capability: ImageService) =>
-      vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Window,
-          title: "Please wait while the classification is perfomed."
-        },
-        () => capability.classify(uri.fsPath)
-      )
-    );
-
-    if (response.status === CapabilityResponseStatus.NOT_AVAILABLE) {
-      vscode.window.showWarningMessage(response.message!);
-      return;
-    }
-
-    const imageDescriptor = response.body as ImageDescriptor;
-    vscode.window.showInformationMessage(
-      `Best match: ${imageDescriptor.items[0].className} (${imageDescriptor.items[0].probability}%)`
-    );
-  } catch (e) {
-    vscode.window.showErrorMessage(e);
-  }
 }
