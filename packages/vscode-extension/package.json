@@ -13,40 +13,56 @@
   "contributes": {
     "commands": [
       {
-        "command": "extension.command.classify",
+        "command": "extension.command.image.classify",
         "title": "Classify",
         "enablement": "serverUp",
         "icon": "$(output)",
-        "category": "Image services"
+        "category": "Editor services"
       },
       {
-        "command": "extension.command.detect",
+        "command": "extension.command.image.detect",
         "title": "Detect Objects",
         "enablement": "serverUp",
         "icon": "$(jersey)",
-        "category": "Image services"
+        "category": "Editor services"
+      },
+      {
+        "command": "extension.command.text.sentiment",
+        "title": "Sentiment Analysis",
+        "enablement": "serverUp",
+        "icon": "$(heart)",
+        "category": "Editor services"
       }
     ],
     "menus": {
       "commandPalette": [
         {
           "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
-          "command": "extension.command.classify"
+          "command": "extension.command.image.classify"
         },
         {
           "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
-          "command": "extension.command.detect"
+          "command": "extension.command.image.detect"
+        },
+        {
+          "when": "resourceLangId == plaintext",
+          "command": "extension.command.text.sentiment"
         }
       ],
       "editor/title": [
         {
           "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
-          "command": "extension.command.classify",
+          "command": "extension.command.image.classify",
           "group": "navigation"
         },
         {
           "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
-          "command": "extension.command.detect",
+          "command": "extension.command.image.detect",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceLangId == plaintext",
+          "command": "extension.command.text.sentiment",
           "group": "navigation"
         }
       ]

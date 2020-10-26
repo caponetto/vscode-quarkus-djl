@@ -3,22 +3,21 @@
 [![GitHub Stars](https://img.shields.io/github/stars/caponetto/vscode-quarkus-djl.svg)](https://github.com/caponetto/vscode-quarkus-djl/stargazers)
 [![License](https://img.shields.io/github/license/caponetto/vscode-quarkus-djl.svg)](https://github.com/caponetto/vscode-quarkus-djl/blob/main/LICENSE)
 
-# Image services on VS Code with Quarkus and DJL
+# Editor services on VS Code with Quarkus and DJL
 
 <p align="center">
-  <a href="documentation/classify.gif"><img src="documentation/classify.gif" width="350"></a>
-  <a href="documentation/detect.gif"><img src="documentation/detect.gif" width="350"></a>
+  <a href="documentation/demos/classify.gif"><img src="documentation/demos/classify.gif" width="250"></a>
+  <a href="documentation/demos/detect.gif"><img src="documentation/demos/detect.gif" width="250"></a>
+  <a href="documentation/demos/sentiment.gif"><img src="documentation/demos/sentiment.gif" width="250"></a>
 </p>
 
-Putting together [VS Code extension](https://code.visualstudio.com/api), [Quarkus](https://quarkus.io/), and [Deep Java Library](https://djl.ai/) into a simple project.
-
-Just for fun. :P
+Putting together [VS Code extension](https://code.visualstudio.com/api), [Quarkus](https://quarkus.io/), and [Deep Java Library](https://djl.ai/) into a simple project. Just for fun. :P
 
 ## Modules
 
-1. `vscode-extension`: Activate the VS Code extension when an image is opened by initializing the Quarkus app (with support of the backend library from [Kogito Tooling](https://github.com/kiegroup/kogito-tooling)).
+1. `vscode-extension`: Activate the VS Code extension when an image or text file is opened by initializing the Quarkus app (with support of the backend library from [Kogito Tooling](https://github.com/kiegroup/kogito-tooling)).
 
-1. `app-server`: Quarkus application that exposes REST endpoints for image services, such as image classification and object detection.
+1. `app-server`: Quarkus application that exposes REST endpoints for editor services, such as image classification, object detection, and sentiment analysis.
 
 **Note**: The Quarkus application is automatically started up and stopped when the VS Code extension is activated and deactivated, respectively. Also, the build process takes care of embedding the Quarkus application into the VS Code extension.
 
@@ -35,9 +34,13 @@ Just for fun. :P
 - In the terminal, execute `yarn run init && yarn run build:fast`
 - `F5` to start debugging
 
-Open an image file (`*.png`, `*.jpg`, or `*.jpeg`) and click on the `Classify` or `Detect Objects` button.
+Then:
+1. Open an image file (`*.png`, `*.jpg`, or `*.jpeg`) and click on the `Classify` <img src="documentation/images/buttons/output.png"> or `Detect Objects` <img src="documentation/images/buttons/jersey.png"> button.
+1. Open a text file (`*.txt`) and click on the `Sentiment Analysis` <img src="documentation/images/buttons/heart.png"> button.
 
-VS Code will send a POST request to the embedded Quarkus app, which will perform the required operation on the image and report back the result.
+VS Code will send a POST request to the embedded Quarkus app, which will perform the required operation on the image/text and report back the result.
+
+**Important**: Running for the first time will require a longer time to complete each operation since the models need to be downloaded and cached into your machine.
 
 ## Generating the vsix file
 

@@ -1,10 +1,10 @@
-package com.caponetto.service;
+package com.caponetto.service.image;
 
 import java.io.IOException;
 
 import ai.djl.ModelException;
 import ai.djl.translate.TranslateException;
-import com.caponetto.model.ImageDescriptor;
+import com.caponetto.model.image.ImageDescriptor;
 import org.apache.commons.imaging.ImageReadException;
 
 public interface ImageService {

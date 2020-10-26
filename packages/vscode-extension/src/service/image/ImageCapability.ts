@@ -1,5 +1,5 @@
 import { Capability, CapabilityResponse } from "@kogito-tooling/backend/dist/api";
-import { ImageDescriptor } from "../model/ImageDescriptor";
+import { ImageDescriptor } from "../../model/image/ImageDescriptor";
 
 export interface ImageCapability extends Capability {
   /**

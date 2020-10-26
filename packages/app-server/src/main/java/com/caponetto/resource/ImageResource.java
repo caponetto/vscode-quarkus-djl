@@ -14,13 +14,14 @@ import javax.ws.rs.core.Response.Status;
 
 import ai.djl.ModelException;
 import ai.djl.translate.TranslateException;
-import com.caponetto.model.ImageRequest;
-import com.caponetto.service.ImageService;
+import com.caponetto.model.image.ImageRequest;
+import com.caponetto.service.image.ImageService;
 import org.apache.commons.imaging.ImageReadException;
 
-@Path("/")
+@Path(ImageResource.BASE_PATH)
 public class ImageResource {
 
+    public static final String BASE_PATH = "/image";
     public static final String CLASSIFY_PATH = "/classify";
     public static final String DETECT_PATH = "/detect";
 

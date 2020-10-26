@@ -1,4 +1,4 @@
-package com.caponetto.service;
+package com.caponetto.service.image;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -29,9 +29,9 @@ import ai.djl.repository.zoo.ZooModel;
 import ai.djl.training.util.ProgressBar;
 import ai.djl.translate.TranslateException;
 import ai.djl.translate.Translator;
-import com.caponetto.model.BoundingBox;
-import com.caponetto.model.ImageDescriptor;
-import com.caponetto.model.ImageItem;
+import com.caponetto.model.image.BoundingBox;
+import com.caponetto.model.image.ImageDescriptor;
+import com.caponetto.model.image.ImageItem;
 import com.caponetto.utils.ImageUtils;
 
 @ApplicationScoped

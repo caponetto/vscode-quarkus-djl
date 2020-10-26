@@ -15,8 +15,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import ai.djl.util.RandomUtils;
-import com.caponetto.model.BoundingBox;
-import com.caponetto.model.ImageItem;
+import com.caponetto.model.image.BoundingBox;
+import com.caponetto.model.image.ImageItem;
 
 public class ImageUtils {
 

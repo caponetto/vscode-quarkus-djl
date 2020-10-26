@@ -1,2 +1,3 @@
-export const CLASSIFY_ENDPOINT = "/classify";
-export const DETECT_ENDPOINT = "/detect";
+export const CLASSIFY_ENDPOINT = "/image/classify";
+export const DETECT_ENDPOINT = "/image/detect";
+export const SENTIMENT_ENDPOINT = "/text/sentiment";
