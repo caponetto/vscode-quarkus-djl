@@ -1,4 +1,4 @@
-package com.caponetto.model;
+package com.caponetto.model.image;
 
 import java.util.List;
 import java.util.Objects;

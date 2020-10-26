@@ -1,8 +1,8 @@
 import { CapabilityResponse, LocalHttpService } from "@kogito-tooling/backend/dist/api";
-import { ImageDescriptor } from "../model/ImageDescriptor";
-import { ImageRequest } from "../model/ImageRequest";
-import { CLASSIFY_ENDPOINT, DETECT_ENDPOINT } from "./endpoints";
-import { IMAGE_SERVICE_ID } from "./ids";
+import { ImageDescriptor } from "../../model/image/ImageDescriptor";
+import { ImageRequest } from "../../model/image/ImageRequest";
+import { CLASSIFY_ENDPOINT, DETECT_ENDPOINT } from "../endpoints";
+import { IMAGE_SERVICE_ID } from "../ids";
 import { ImageCapability } from "./ImageCapability";
 
 export class ImageService extends LocalHttpService implements ImageCapability {

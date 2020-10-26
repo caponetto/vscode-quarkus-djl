@@ -1,17 +1,19 @@
 import { BackendManagerService, BackendProxy, CapabilityResponseStatus } from "@kogito-tooling/backend/dist/api";
 import { QuarkusLocalServer } from "@kogito-tooling/backend/dist/node";
 import * as vscode from "vscode";
-import { ImageDescriptor } from "../model/ImageDescriptor";
-import { IMAGE_SERVICE_ID } from "../service/ids";
-import { ImageService } from "../service/ImageService";
+import { ImageDescriptor } from "../model/image/ImageDescriptor";
+import { TextDescriptor } from "../model/text/TextDescriptor";
+import { IMAGE_SERVICE_ID, TEXT_SERVICE_ID } from "../service/ids";
+import { ImageCapability } from "../service/image/ImageCapability";
+import { TextCapability } from "../service/text/TextCapability";
 
 export async function runClassifyCommand(uri: vscode.Uri, backendProxy: BackendProxy) {
   try {
-    const response = await backendProxy.withCapability(IMAGE_SERVICE_ID, async (capability: ImageService) =>
+    const response = await backendProxy.withCapability(IMAGE_SERVICE_ID, async (capability: ImageCapability) =>
       vscode.window.withProgress(
         {
-          location: vscode.ProgressLocation.Window,
-          title: "Please wait while the classification is perfomed."
+          location: vscode.ProgressLocation.Notification,
+          title: "Classifying ..."
         },
         () => capability.classify(uri.fsPath)
       )
@@ -33,11 +35,11 @@ export async function runClassifyCommand(uri: vscode.Uri, backendProxy: BackendP
 
 export async function runDetectCommand(uri: vscode.Uri, backendProxy: BackendProxy) {
   try {
-    const response = await backendProxy.withCapability(IMAGE_SERVICE_ID, async (capability: ImageService) =>
+    const response = await backendProxy.withCapability(IMAGE_SERVICE_ID, async (capability: ImageCapability) =>
       vscode.window.withProgress(
         {
-          location: vscode.ProgressLocation.Window,
-          title: "Please wait while the object detection is perfomed."
+          location: vscode.ProgressLocation.Notification,
+          title: "Detecting objects ..."
         },
         () => capability.detect(uri.fsPath)
       )
@@ -57,7 +59,39 @@ export async function runDetectCommand(uri: vscode.Uri, backendProxy: BackendPro
     if (!selection) {
       return;
     }
-    await vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(imageDescriptor.path), vscode.ViewColumn.Beside);
+    await vscode.commands.executeCommand(
+      "vscode.open",
+      vscode.Uri.parse(imageDescriptor.path),
+      vscode.ViewColumn.Beside
+    );
+  } catch (e) {
+    vscode.window.showErrorMessage(e);
+  }
+}
+
+export async function runSentimentAnalysisCommand(text: string | undefined, backendProxy: BackendProxy) {
+  if (!text) {
+    return;
+  }
+
+  try {
+    const response = await backendProxy.withCapability(TEXT_SERVICE_ID, async (capability: TextCapability) =>
+      vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: "Analyzing ..."
+        },
+        () => capability.analyzeSentiment(text)
+      )
+    );
+
+    if (response.status === CapabilityResponseStatus.NOT_AVAILABLE) {
+      vscode.window.showWarningMessage(response.message!);
+      return;
+    }
+
+    const textDescriptor = response.body as TextDescriptor;
+    vscode.window.showInformationMessage(`This text looks ${textDescriptor.positive ? "positive :)" : "negative :("}`);
   } catch (e) {
     vscode.window.showErrorMessage(e);
   }

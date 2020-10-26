@@ -1,15 +1,14 @@
 package com.caponetto.resource;
 
-import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.ws.rs.core.Response.Status;
 
-import com.caponetto.model.ImageDescriptor;
-import com.caponetto.model.ImageItem;
-import com.caponetto.model.ImageRequest;
+import com.caponetto.model.image.ImageDescriptor;
+import com.caponetto.model.image.ImageItem;
+import com.caponetto.model.image.ImageRequest;
 import com.caponetto.utils.ImageUtils;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
@@ -22,7 +21,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
-class ImageResourceTest {
+class ImageResourceTest extends BaseTest {
 
     @Test
     void testClassifySuccess() {
@@ -36,7 +35,7 @@ class ImageResourceTest {
         given()
                 .contentType(ContentType.JSON)
                 .body(JsonObject.mapFrom(imageRequest).toString())
-                .post(ImageResource.CLASSIFY_PATH)
+                .post(ImageResource.BASE_PATH + ImageResource.CLASSIFY_PATH)
                 .then()
                 .contentType(ContentType.JSON)
                 .statusCode(equalTo(Status.OK.getStatusCode()))
@@ -50,7 +49,7 @@ class ImageResourceTest {
         given()
                 .contentType(ContentType.JSON)
                 .body(JsonObject.mapFrom(imageRequest).toString())
-                .post(ImageResource.CLASSIFY_PATH)
+                .post(ImageResource.BASE_PATH + ImageResource.CLASSIFY_PATH)
                 .then()
                 .statusCode(equalTo(Status.BAD_REQUEST.getStatusCode()));
     }
@@ -63,7 +62,7 @@ class ImageResourceTest {
         given()
                 .contentType(ContentType.JSON)
                 .body(JsonObject.mapFrom(imageRequest).toString())
-                .post(ImageResource.DETECT_PATH)
+                .post(ImageResource.BASE_PATH + ImageResource.DETECT_PATH)
                 .then()
                 .contentType(ContentType.JSON)
                 .statusCode(equalTo(Status.OK.getStatusCode()))
@@ -77,16 +76,8 @@ class ImageResourceTest {
         given()
                 .contentType(ContentType.JSON)
                 .body(JsonObject.mapFrom(imageRequest).toString())
-                .post(ImageResource.DETECT_PATH)
+                .post(ImageResource.BASE_PATH + ImageResource.DETECT_PATH)
                 .then()
                 .statusCode(equalTo(Status.BAD_REQUEST.getStatusCode()));
-    }
-
-    private String getPathFromTestFile(final String filename) {
-        return new File(getClass()
-                                .getClassLoader()
-                                .getResource(filename)
-                                .getFile())
-                .getAbsolutePath();
     }
 }
