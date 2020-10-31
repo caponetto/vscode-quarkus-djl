@@ -7,6 +7,7 @@ import { ImageService } from "../service/image/ImageService";
 import { TextService } from "../service/text/TextService";
 import {
   checkLocalQuarkusServerAvailability,
+  runAutoCropCommand,
   runClassifyCommand,
   runDetectCommand,
   runSentimentAnalysisCommand
@@ -14,6 +15,7 @@ import {
 
 const IMAGE_CLASSIFY_COMMAND = "extension.command.image.classify";
 const IMAGE_DETECT_COMMAND = "extension.command.image.detect";
+const AUTO_CROP_COMMAND = "extension.command.image.autocrop";
 const TEXT_SENTIMENT_COMMAND = "extension.command.text.sentiment";
 
 let backendProxy: BackendProxy;
@@ -34,9 +36,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   context.subscriptions.push(
     vscode.commands.registerCommand(IMAGE_CLASSIFY_COMMAND, (uri: vscode.Uri) => runClassifyCommand(uri, backendProxy)),
     vscode.commands.registerCommand(IMAGE_DETECT_COMMAND, (uri: vscode.Uri) => runDetectCommand(uri, backendProxy)),
-    vscode.commands.registerCommand(TEXT_SENTIMENT_COMMAND, () =>
-      runSentimentAnalysisCommand(vscode.window.activeTextEditor?.document.getText(), backendProxy)
-    )
+    vscode.commands.registerCommand(AUTO_CROP_COMMAND, (uri: vscode.Uri) => runAutoCropCommand(uri, backendProxy)),
+    vscode.commands.registerCommand(TEXT_SENTIMENT_COMMAND, () => runSentimentAnalysisCommand(vscode.window.activeTextEditor?.document.getText(), backendProxy))
   );
 
   checkLocalQuarkusServerAvailability(backendManager, localServer);

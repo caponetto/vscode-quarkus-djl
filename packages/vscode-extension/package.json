@@ -27,6 +27,13 @@
         "category": "Editor services"
       },
       {
+        "command": "extension.command.image.autocrop",
+        "title": "Auto Crop",
+        "enablement": "serverUp",
+        "icon": "$(symbol-value)",
+        "category": "Editor services"
+      },
+      {
         "command": "extension.command.text.sentiment",
         "title": "Sentiment Analysis",
         "enablement": "serverUp",
@@ -45,6 +52,10 @@
           "command": "extension.command.image.detect"
         },
         {
+          "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
+          "command": "extension.command.image.autocrop"
+        },
+        {
           "when": "resourceLangId == plaintext",
           "command": "extension.command.text.sentiment"
         }
@@ -58,6 +69,11 @@
         {
           "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
           "command": "extension.command.image.detect",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
+          "command": "extension.command.image.autocrop",
           "group": "navigation"
         },
         {

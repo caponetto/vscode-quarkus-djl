@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
@@ -33,6 +35,14 @@ public class ImageUtils {
         // Empty
     }
 
+    /**
+     * Draw bounding boxes on a scaled down image copy.
+     *
+     * @param originalPath The path of the original image.
+     * @param items        The items that contain the information about the bounding boxes.
+     * @return The path of the output image.
+     * @throws IOException
+     */
     public static Path drawBoundingBoxes(final Path originalPath,
                                          final List<ImageItem> items) throws IOException {
         final Path outputPath = File.createTempFile(TEMP_PREFIX, TEMP_SUFFIX).toPath();
@@ -65,10 +75,10 @@ public class ImageUtils {
                          (int) (boundingBox.getWidth() * scale),
                          (int) (boundingBox.getHeight() * scale));
 
-            drawText(g2d,
-                     String.format("%s (%s%%)", item.getClassName(), item.getProbability()),
-                     (int) (boundingBox.getX() * scale),
-                     (int) (boundingBox.getY() * scale));
+            ImageUtils.drawText(g2d,
+                                String.format("%s (%s%%)", item.getClassName(), item.getProbability()),
+                                (int) (boundingBox.getX() * scale),
+                                (int) (boundingBox.getY() * scale));
         });
 
         g2d.dispose();
@@ -99,5 +109,47 @@ public class ImageUtils {
         double scaleW = MAX_WIDTH / (double) width;
         double scaleH = MAX_HEIGHT / (double) height;
         return Math.min(scaleW, scaleH);
+    }
+
+    /**
+     * Crop the bounding boxes and save them into new image files.
+     *
+     * @param originalPath The path of the original image.
+     * @param items        The items that contain the information about the bounding boxes.
+     * @return The list of paths of the output files.
+     * @throws IOException
+     */
+    public static List<Path> cropBoundingBoxes(final Path originalPath,
+                                               final List<ImageItem> items) throws IOException {
+        final BufferedImage originalImage = ImageIO.read(originalPath.toFile());
+        return items.stream().map(item -> {
+            try {
+                final Path outputPath = File.createTempFile(item.getClassName(), TEMP_SUFFIX).toPath();
+                final BoundingBox fixedBoundingBox = ImageUtils.fixBoundaries(item.getBoundingBox(), originalImage);
+                final BufferedImage imageItem = originalImage.getSubimage(fixedBoundingBox.getX(),
+                                                                          fixedBoundingBox.getY(),
+                                                                          fixedBoundingBox.getWidth(),
+                                                                          fixedBoundingBox.getHeight());
+                ImageIO.write(imageItem, OUTPUT_EXTENSION, outputPath.toFile());
+                return outputPath;
+            } catch (IOException e) {
+                return null;
+            }
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    private static BoundingBox fixBoundaries(final BoundingBox original, final BufferedImage image) {
+        int x = Math.max(0, original.getX());
+        int y = Math.max(0, original.getY());
+
+        int width = (x + original.getWidth() > image.getWidth())
+                ? (image.getWidth() - x)
+                : original.getWidth();
+
+        int height = (y + original.getHeight() > image.getHeight())
+                ? (image.getHeight() - y)
+                : original.getHeight();
+
+        return new BoundingBox(x, y, width, height);
     }
 }
