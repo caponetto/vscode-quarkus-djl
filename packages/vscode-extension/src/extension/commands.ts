@@ -51,6 +51,12 @@ export async function runDetectCommand(uri: vscode.Uri, backendProxy: BackendPro
     }
 
     const imageDescriptor = response.body as ImageDescriptor;
+
+    if (imageDescriptor.items.length === 0) {
+      vscode.window.showWarningMessage("No objects have been detected :(");
+      return;
+    }
+
     const selection = await vscode.window.showInformationMessage(
       `${imageDescriptor.items.length} object(s) found in the image.`,
       "See details"
@@ -59,11 +65,53 @@ export async function runDetectCommand(uri: vscode.Uri, backendProxy: BackendPro
     if (!selection) {
       return;
     }
+
     await vscode.commands.executeCommand(
       "vscode.open",
       vscode.Uri.parse(imageDescriptor.path),
       vscode.ViewColumn.Beside
     );
+  } catch (e) {
+    vscode.window.showErrorMessage(e);
+  }
+}
+
+export async function runAutoCropCommand(uri: vscode.Uri, backendProxy: BackendProxy) {
+  try {
+    const response = await backendProxy.withCapability(IMAGE_SERVICE_ID, async (capability: ImageCapability) =>
+      vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: "Auto cropping ..."
+        },
+        () => capability.autoCrop(uri.fsPath)
+      )
+    );
+
+    if (response.status === CapabilityResponseStatus.NOT_AVAILABLE) {
+      vscode.window.showWarningMessage(response.message!);
+      return;
+    }
+
+    const croppedPaths = response.body as string[];
+
+    if (croppedPaths.length === 0) {
+      vscode.window.showWarningMessage("No objects have been detected to be cropped :(");
+      return;
+    }
+
+    const selection = await vscode.window.showInformationMessage(
+      `${croppedPaths.length} cropped image(s) have been generated.`,
+      "See details"
+    );
+
+    if (!selection) {
+      return;
+    }
+
+    for (const path of croppedPaths) {
+      await vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(path), vscode.ViewColumn.Beside);
+    }
   } catch (e) {
     vscode.window.showErrorMessage(e);
   }

@@ -24,6 +24,7 @@ public class ImageResource {
     public static final String BASE_PATH = "/image";
     public static final String CLASSIFY_PATH = "/classify";
     public static final String DETECT_PATH = "/detect";
+    public static final String AUTO_CROP_PATH = "/autocrop";
 
     @Inject
     ImageService service;
@@ -55,6 +56,22 @@ public class ImageResource {
 
         try {
             return Response.ok(service.detect(request.getPath(), request.getTopK(), request.getThreshold())).build();
+        } catch (TranslateException | IOException | ModelException e) {
+            return Response.serverError().build();
+        }
+    }
+
+    @POST
+    @Path(AUTO_CROP_PATH)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response autoCrop(final ImageRequest request) {
+        if (!new File(request.getPath()).exists()) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+
+        try {
+            return Response.ok(service.autoCrop(request.getPath(), request.getTopK(), request.getThreshold())).build();
         } catch (TranslateException | IOException | ModelException e) {
             return Response.serverError().build();
         }

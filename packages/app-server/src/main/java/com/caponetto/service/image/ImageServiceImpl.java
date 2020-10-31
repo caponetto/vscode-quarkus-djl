@@ -93,6 +93,16 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    @Override
+    public List<String> autoCrop(final String path, int topK, int threshold)
+            throws TranslateException, IOException, ModelException {
+        final ImageDescriptor imageDescriptor = detect(path, topK, threshold);
+        return ImageUtils.cropBoundingBoxes(Paths.get(path), imageDescriptor.getItems())
+                .stream()
+                .map(Path::toString)
+                .collect(Collectors.toList());
+    }
+
     private Criteria<Image, Classifications> buildCriteriaForClassifier() {
         final Builder<Image, Classifications> criteriaBuilder = Criteria.builder()
                 .setTypes(Image.class, Classifications.class)

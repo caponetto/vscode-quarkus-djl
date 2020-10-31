@@ -5,38 +5,54 @@
 
 # Editor services on VS Code with Quarkus and DJL
 
-<p align="center">
-  <a href="documentation/demos/classify.gif"><img src="documentation/demos/classify.gif" width="250"></a>
-  <a href="documentation/demos/detect.gif"><img src="documentation/demos/detect.gif" width="250"></a>
-  <a href="documentation/demos/sentiment.gif"><img src="documentation/demos/sentiment.gif" width="250"></a>
-</p>
-
-Putting together [VS Code extension](https://code.visualstudio.com/api), [Quarkus](https://quarkus.io/), and [Deep Java Library](https://djl.ai/) into a simple project. Just for fun. :P
+Putting together [VS Code extension](https://code.visualstudio.com/api), [Quarkus](https://quarkus.io/), and [Deep Java Library](https://djl.ai/) into a simple project. Just for fun! :P
 
 ## Modules
 
-1. `vscode-extension`: Activate the VS Code extension when an image or text file is opened by initializing the Quarkus app (with support of the backend library from [Kogito Tooling](https://github.com/kiegroup/kogito-tooling)).
+1. `vscode-extension`: Activate the VS Code extension by initializing the Quarkus app (with support of the backend library from [Kogito Tooling](https://github.com/kiegroup/kogito-tooling)).
 
-1. `app-server`: Quarkus application that exposes REST endpoints for editor services, such as image classification, object detection, and sentiment analysis.
+1. `app-server`: Quarkus application that exposes REST endpoints for editor services.
 
 **Note**: The Quarkus application is automatically started up and stopped when the VS Code extension is activated and deactivated, respectively. Also, the build process takes care of embedding the Quarkus application into the VS Code extension.
 
 ## Requirements
 
-- [Maven](https://maven.apache.org/) 3.6.2 or later
-- [Java](https://openjdk.java.net/install/) 11 or later
+- [Maven](https://maven.apache.org/) 3.6.2+
+- [Java](https://openjdk.java.net/install/) 11+
 - [Node](https://nodejs.org/) LTS
 - [Yarn](https://yarnpkg.com/)
 
-## Running the example
+## Available services
+
+- **Image classification**
+<p align="center">
+  <a href="documentation/demos/classify.gif"><img src="documentation/demos/classify.gif" width="500"></a>
+</p>
+
+- **Object detection**
+<p align="center">
+  <a href="documentation/demos/detect.gif"><img src="documentation/demos/detect.gif" width="500"></a>
+</p>
+
+- **Auto crop detected objects**
+<p align="center">
+  <a href="documentation/demos/autocrop.gif"><img src="documentation/demos/autocrop.gif" width="500"></a>
+</p>
+
+- **Sentiment analysis**
+<p align="center">
+  <a href="documentation/demos/sentiment.gif"><img src="documentation/demos/sentiment.gif" width="500"></a>
+</p>
+
+## Running for development
 
 - Open this example in VS Code 1.43+
 - In the terminal, execute `yarn run init && yarn run build:fast`
 - `F5` to start debugging
 
 Then:
-1. Open an image file (`*.png`, `*.jpg`, or `*.jpeg`) and click on the `Classify` <img src="documentation/images/buttons/output.png"> or `Detect Objects` <img src="documentation/images/buttons/jersey.png"> button.
-1. Open a text file (`*.txt`) and click on the `Sentiment Analysis` <img src="documentation/images/buttons/heart.png"> button.
+1. Open an image file (`*.png`, `*.jpg`, or `*.jpeg`) and click on the buttons for image services.
+1. Open a text file (`*.txt`) and click on the buttons for text services.
 
 VS Code will send a POST request to the embedded Quarkus app, which will perform the required operation on the image/text and report back the result.
 
