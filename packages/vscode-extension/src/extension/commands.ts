@@ -1,5 +1,4 @@
-import { BackendManagerService, BackendProxy, CapabilityResponseStatus } from "@kogito-tooling/backend/dist/api";
-import { QuarkusLocalServer } from "@kogito-tooling/backend/dist/node";
+import { BackendProxy, CapabilityResponseStatus } from "@kogito-tooling/backend/dist/api";
 import * as vscode from "vscode";
 import { ImageDescriptor } from "../model/image/ImageDescriptor";
 import { TextDescriptor } from "../model/text/TextDescriptor";
@@ -145,10 +144,6 @@ export async function runSentimentAnalysisCommand(text: string | undefined, back
   }
 }
 
-export async function checkLocalQuarkusServerAvailability(
-  backendManager: BackendManagerService,
-  localServer: QuarkusLocalServer
-) {
-  const isServerUp = (await backendManager.getService(localServer.identify())) !== undefined;
-  vscode.commands.executeCommand("setContext", "serverUp", isServerUp);
+export async function setServerUp() {
+  await vscode.commands.executeCommand("setContext", "serverUp", true);
 }

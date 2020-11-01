@@ -10,9 +10,20 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
 class TextResourceTest extends BaseTest {
+
+    @Test
+    void testGetModels() {
+        given()
+                .get(TextResource.BASE_PATH + TextResource.MODELS_PATH)
+                .then()
+                .contentType(ContentType.JSON)
+                .statusCode(equalTo(Response.Status.OK.getStatusCode()))
+                .body("size()", is(1));
+    }
 
     @Test
     void testSentimentPositive() {

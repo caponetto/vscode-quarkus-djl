@@ -24,6 +24,16 @@ import static org.hamcrest.CoreMatchers.is;
 class ImageResourceTest extends BaseTest {
 
     @Test
+    void testGetModels() {
+        given()
+                .get(ImageResource.BASE_PATH + ImageResource.MODELS_PATH)
+                .then()
+                .contentType(ContentType.JSON)
+                .statusCode(equalTo(Status.OK.getStatusCode()))
+                .body("size()", is(2));
+    }
+
+    @Test
     void testClassifySuccess() {
         final String filePath = getPathFromTestFile("cat.jpg");
         final ImageRequest imageRequest = new ImageRequest(filePath, 1, 50);

@@ -12,6 +12,6 @@ export class TextService extends LocalHttpService implements TextCapability {
 
   public async analyzeSentiment(text: string): Promise<CapabilityResponse<TextDescriptor>> {
     const response = await super.execute(SENTIMENT_ENDPOINT, { text: text } as TextRequest);
-    return CapabilityResponse.ok<TextDescriptor>(response.body as TextDescriptor);
+    return CapabilityResponse.ok(response.body);
   }
 }

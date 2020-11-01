@@ -6,8 +6,9 @@ import ai.djl.MalformedModelException;
 import ai.djl.repository.zoo.ModelNotFoundException;
 import ai.djl.translate.TranslateException;
 import com.caponetto.model.text.TextDescriptor;
+import com.caponetto.service.EditorService;
 
-public interface TextService {
+public interface TextService extends EditorService {
 
     /**
      * Analyse the sentiment of the given text and report back the descriptor.

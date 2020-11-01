@@ -1,7 +1,9 @@
 package com.caponetto.service.text;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -19,6 +21,17 @@ import com.caponetto.model.text.TextDescriptor;
 
 @ApplicationScoped
 public class TextServiceImpl implements TextService {
+
+    @Override
+    public List<String> getModels() {
+        final List<String> loadedModels = new ArrayList<>();
+        try (ZooModel<String, Classifications> model = ModelZoo.loadModel(buildCriteria())) {
+            loadedModels.add(model.getName());
+        } catch (MalformedModelException | ModelNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return loadedModels;
+    }
 
     @Override
     public TextDescriptor analyzeSentiment(final String text)
