@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -22,12 +23,20 @@ import org.apache.commons.imaging.ImageReadException;
 public class ImageResource {
 
     public static final String BASE_PATH = "/image";
+    public static final String MODELS_PATH = "/models";
     public static final String CLASSIFY_PATH = "/classify";
     public static final String DETECT_PATH = "/detect";
     public static final String AUTO_CROP_PATH = "/autocrop";
 
     @Inject
     ImageService service;
+
+    @GET
+    @Path(MODELS_PATH)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getModels() {
+        return Response.ok(service.getModels()).build();
+    }
 
     @POST
     @Path(CLASSIFY_PATH)

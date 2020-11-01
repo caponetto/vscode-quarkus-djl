@@ -6,9 +6,10 @@ import java.util.List;
 import ai.djl.ModelException;
 import ai.djl.translate.TranslateException;
 import com.caponetto.model.image.ImageDescriptor;
+import com.caponetto.service.EditorService;
 import org.apache.commons.imaging.ImageReadException;
 
-public interface ImageService {
+public interface ImageService extends EditorService {
 
     /**
      * Classify an image in the given path and return a descriptor.

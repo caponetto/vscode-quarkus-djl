@@ -1,16 +1,19 @@
-import { BackendManagerService, BackendProxy } from "@kogito-tooling/backend/dist/api";
+import { BackendManagerService, BackendProxy, CapabilityResponseStatus } from "@kogito-tooling/backend/dist/api";
 import { DefaultHttpBridge } from "@kogito-tooling/backend/dist/http-bridge";
 import { QuarkusLocalServer } from "@kogito-tooling/backend/dist/node";
 import * as path from "path";
 import * as vscode from "vscode";
+import { MODEL_SERVICE_ID } from "../service/ids";
 import { ImageService } from "../service/image/ImageService";
+import { ModelCapability } from "../service/ModelCapability";
+import { ModelService } from "../service/ModelService";
 import { TextService } from "../service/text/TextService";
 import {
-  checkLocalQuarkusServerAvailability,
   runAutoCropCommand,
   runClassifyCommand,
   runDetectCommand,
-  runSentimentAnalysisCommand
+  runSentimentAnalysisCommand,
+  setServerUp
 } from "./commands";
 
 const IMAGE_CLASSIFY_COMMAND = "extension.command.image.classify";
@@ -25,7 +28,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const backendManager = new BackendManagerService({
     bridge: new DefaultHttpBridge(),
     localHttpServer: localServer,
-    lazyServices: [new ImageService(), new TextService()]
+    lazyServices: [new ModelService(), new ImageService(), new TextService()]
   });
 
   await backendManager.start();
@@ -40,9 +43,41 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     vscode.commands.registerCommand(TEXT_SENTIMENT_COMMAND, () => runSentimentAnalysisCommand(vscode.window.activeTextEditor?.document.getText(), backendProxy))
   );
 
-  checkLocalQuarkusServerAvailability(backendManager, localServer);
+  await finishLoadServices(backendManager, localServer);
 }
 
 export function deactivate(): void {
   backendProxy?.stopServices();
+}
+
+async function finishLoadServices(backendManager: BackendManagerService, localServer: QuarkusLocalServer) {
+  const isServerUp = (await backendManager.getService(localServer.identify())) !== undefined;
+
+  if (!isServerUp) {
+    vscode.window.showWarningMessage("Something went wrong. The local Quarkus server cannot be started up.");
+    return;
+  }
+
+  await loadModels();
+  await setServerUp();
+}
+
+async function loadModels() {
+  try {
+    const response = await backendProxy.withCapability(MODEL_SERVICE_ID, async (capability: ModelCapability) =>
+      vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: "Checking the models. It could take a while in the first usage."
+        },
+        () => capability.loadModels()
+      )
+    );
+
+    if (response.status === CapabilityResponseStatus.NOT_AVAILABLE) {
+      vscode.window.showWarningMessage(response.message!);
+    }
+  } catch (e) {
+    vscode.window.showErrorMessage(e);
+  }
 }

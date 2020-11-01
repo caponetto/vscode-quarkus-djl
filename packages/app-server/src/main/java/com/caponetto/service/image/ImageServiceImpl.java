@@ -3,6 +3,7 @@ package com.caponetto.service.image;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 
 import ai.djl.Application;
+import ai.djl.MalformedModelException;
 import ai.djl.ModelException;
 import ai.djl.engine.Engine;
 import ai.djl.inference.Predictor;
@@ -24,6 +26,7 @@ import ai.djl.modality.cv.transform.Resize;
 import ai.djl.modality.cv.translator.ImageClassificationTranslator;
 import ai.djl.repository.zoo.Criteria;
 import ai.djl.repository.zoo.Criteria.Builder;
+import ai.djl.repository.zoo.ModelNotFoundException;
 import ai.djl.repository.zoo.ModelZoo;
 import ai.djl.repository.zoo.ZooModel;
 import ai.djl.training.util.ProgressBar;
@@ -46,6 +49,22 @@ public class ImageServiceImpl implements ImageService {
     private static final String RESNET_MODEL_NAME = "resnet";
     private static final String RESNET_50_MODEL_NAME = "resnet50";
     private static final String BACKBONE_KEY = "backbone";
+
+    @Override
+    public List<String> getModels() {
+        final List<String> loadedModels = new ArrayList<>();
+        try (ZooModel<Image, Classifications> model = ModelZoo.loadModel(buildCriteriaForClassifier())) {
+            loadedModels.add(model.getModelPath().toString());
+        } catch (MalformedModelException | ModelNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        try (ZooModel<Image, DetectedObjects> model = ModelZoo.loadModel(buildCriteriaForDetector())) {
+            loadedModels.add(model.getName());
+        } catch (MalformedModelException | ModelNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        return loadedModels;
+    }
 
     @Override
     public ImageDescriptor classify(final String path, int topK, int threshold)

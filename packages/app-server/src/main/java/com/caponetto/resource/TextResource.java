@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -20,10 +21,18 @@ import com.caponetto.service.text.TextService;
 public class TextResource {
 
     public static final String BASE_PATH = "/text";
+    public static final String MODELS_PATH = "/models";
     public static final String SENTIMENT_PATH = "/sentiment";
 
     @Inject
     TextService service;
+
+    @GET
+    @Path(MODELS_PATH)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getModels() {
+        return Response.ok(service.getModels()).build();
+    }
 
     @POST
     @Path(SENTIMENT_PATH)
