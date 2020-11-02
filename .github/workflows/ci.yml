@@ -46,6 +46,7 @@ jobs:
         run: yarn run init
 
       - name: Check yarn.lock md5
+        if: matrix.os == 'ubuntu-latest'
         id: check-yarn-lock-md5
         run: |
           git diff yarn.lock;
