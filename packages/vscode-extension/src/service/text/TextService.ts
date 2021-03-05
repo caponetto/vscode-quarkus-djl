@@ -1,4 +1,4 @@
-import { CapabilityResponse, LocalHttpService } from "@kogito-tooling/backend/dist/api";
+import { CapabilityResponse, LocalHttpService } from "@kie-tooling-core/backend/dist/api";
 import { TextDescriptor } from "../../model/text/TextDescriptor";
 import { TextRequest } from "../../model/text/TextRequest";
 import { SENTIMENT_ENDPOINT } from "../endpoints";

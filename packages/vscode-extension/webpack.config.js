@@ -7,19 +7,19 @@ module.exports = [
     output: {
       library: "ImageServices",
       libraryTarget: "umd",
-      umdNamedDefine: true
+      umdNamedDefine: true,
     },
     externals: {
-      vscode: "commonjs vscode"
+      vscode: "commonjs vscode",
     },
     target: "node",
     entry: {
-      "extension/extension": "./src/extension/extension.ts"
+      "extension/extension": "./src/extension/extension.ts",
     },
     plugins: [
       new CopyWebpackPlugin({
-        patterns: [{ from: "../app-server/target/quarkus-app-*-runner.jar", to: "server/app.jar" }]
-      })
-    ]
-  })
+        patterns: [{ from: "../app-server/target/quarkus-app-*-runner.jar", to: "server/app.jar" }],
+      }),
+    ],
+  }),
 ];

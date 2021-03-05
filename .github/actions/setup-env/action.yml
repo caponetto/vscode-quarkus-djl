@@ -1,0 +1,49 @@
+name: "Setup environment"
+description: "setup"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Setup :: Node"
+      uses: actions/setup-node@v1
+      with:
+        node-version: 16.2.0
+
+    - name: "Setup JDK 11"
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+
+    - name: "Cache Maven packages"
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: "Setup :: Yarn and Lerna"
+      shell: bash
+      run: |
+        npm install -g lerna@4.0.0 yarn@1.22.10
+        yarn config set network-timeout 1000000
+
+    - name: "Bootstrap"
+      shell: bash
+      run: |
+        yarn bootstrap
+
+    - name: "Check :: yarn.lock"
+      shell: bash
+      run: |
+        git diff yarn.lock;
+        [ "0" == "$(git diff yarn.lock | wc -l | tr -d ' ')" ]
+
+    - name: "Check :: dependencies mismatches"
+      shell: bash
+      run: |
+        npx --yes syncpack list-mismatches
+
+    - name: "Check :: format"
+      shell: bash
+      run: |
+        yarn format:check
