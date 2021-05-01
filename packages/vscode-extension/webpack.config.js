@@ -16,6 +16,10 @@ module.exports = [
     entry: {
       "extension/extension": "./src/extension/extension.ts"
     },
-    plugins: [new CopyWebpackPlugin([{ from: "../app-server/target/quarkus-app-*-runner.jar", to: "server/app.jar" }])]
+    plugins: [
+      new CopyWebpackPlugin({
+        patterns: [{ from: "../app-server/target/quarkus-app-*-runner.jar", to: "server/app.jar" }]
+      })
+    ]
   })
 ];
