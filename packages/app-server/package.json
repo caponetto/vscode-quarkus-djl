@@ -1,15 +1,15 @@
 {
-    "name": "vscode-quarkus-djl-app-server",
-    "version": "0.0.1",
-    "description": "",
-    "license": "Apache-2.0",
-    "repository": {
-      "type": "git",
-      "url": "https://github.com/caponetto/vscode-quarkus-djl.git"
-    },
-    "scripts": {
-      "build:fast": "mvn clean package -B -DskipTests -nsu && echo ",
-      "build": "yarn run build:fast",
-      "build:prod": "mvn clean package -B -nsu && echo "
-    }
+  "name": "vscode-quarkus-djl-app-server",
+  "version": "0.0.2",
+  "description": "",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/caponetto/vscode-quarkus-djl.git"
+  },
+  "scripts": {
+    "build:fast": "mvn clean package -B -DskipTests -nsu && echo ",
+    "build": "yarn run build:fast",
+    "build:prod": "mvn clean package -B -nsu && echo "
   }
+}

@@ -40,7 +40,9 @@ jobs:
           node-version: ${{ matrix.node }}
 
       - name: Setup Yarn
-        run: npm install -g yarn@${{ matrix.yarn }}
+        run: |
+          npm install -g yarn@${{ matrix.yarn }}
+          yarn config set network-timeout 1000000
 
       - name: Download dependencies
         run: yarn run init
