@@ -1,4 +1,4 @@
-import { CapabilityResponse, LocalHttpService } from "@kogito-tooling/backend/dist/api";
+import { CapabilityResponse, LocalHttpService } from "@kie-tooling-core/backend/dist/api";
 import { IMAGE_MODELS_ENDPOINT, TEXT_MODELS_ENDPOINT } from "./endpoints";
 import { MODEL_SERVICE_ID } from "./ids";
 import { ModelCapability } from "./ModelCapability";

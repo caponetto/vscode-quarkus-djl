@@ -1,6 +1,6 @@
-import { BackendManagerService, BackendProxy, CapabilityResponseStatus } from "@kogito-tooling/backend/dist/api";
-import { DefaultHttpBridge } from "@kogito-tooling/backend/dist/http-bridge";
-import { QuarkusLocalServer } from "@kogito-tooling/backend/dist/node";
+import { BackendManagerService, BackendProxy, CapabilityResponseStatus } from "@kie-tooling-core/backend/dist/api";
+import { DefaultHttpBridge } from "@kie-tooling-core/backend/dist/http-bridge";
+import { QuarkusLocalServer } from "@kie-tooling-core/backend/dist/node";
 import * as path from "path";
 import * as vscode from "vscode";
 import { MODEL_SERVICE_ID } from "../service/ids";
@@ -13,7 +13,7 @@ import {
   runClassifyCommand,
   runDetectCommand,
   runSentimentAnalysisCommand,
-  setServerUp
+  setServerUp,
 } from "./commands";
 
 const IMAGE_CLASSIFY_COMMAND = "extension.command.image.classify";
@@ -28,7 +28,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const backendManager = new BackendManagerService({
     bridge: new DefaultHttpBridge(),
     localHttpServer: localServer,
-    lazyServices: [new ModelService(), new ImageService(), new TextService()]
+    lazyServices: [new ModelService(), new ImageService(), new TextService()],
   });
 
   await backendManager.start();
@@ -40,7 +40,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     vscode.commands.registerCommand(IMAGE_CLASSIFY_COMMAND, (uri: vscode.Uri) => runClassifyCommand(uri, backendProxy)),
     vscode.commands.registerCommand(IMAGE_DETECT_COMMAND, (uri: vscode.Uri) => runDetectCommand(uri, backendProxy)),
     vscode.commands.registerCommand(AUTO_CROP_COMMAND, (uri: vscode.Uri) => runAutoCropCommand(uri, backendProxy)),
-    vscode.commands.registerCommand(TEXT_SENTIMENT_COMMAND, () => runSentimentAnalysisCommand(vscode.window.activeTextEditor?.document.getText(), backendProxy))
+    vscode.commands.registerCommand(TEXT_SENTIMENT_COMMAND, () =>
+      runSentimentAnalysisCommand(vscode.window.activeTextEditor?.document.getText(), backendProxy)
+    )
   );
 
   await finishLoadServices(backendManager, localServer);
@@ -68,7 +70,7 @@ async function loadModels() {
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Checking the models. It could take a while in the first usage."
+          title: "Checking the models. It could take a while in the first usage.",
         },
         () => capability.loadModels()
       )

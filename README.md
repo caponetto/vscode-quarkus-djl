@@ -47,10 +47,11 @@ Putting together [VS Code extension](https://code.visualstudio.com/api), [Quarku
 ## Running for development
 
 - Open this example in VS Code 1.43+
-- In the terminal, execute `yarn run init && yarn run build:fast`
+- In the terminal, execute `yarn bootstrap && yarn build:dev`
 - `F5` to start debugging
 
 Then:
+
 1. Open an image file (`*.png`, `*.jpg`, or `*.jpeg`) and click on the buttons for image services.
 1. Open a text file (`*.txt`) and click on the buttons for text services.
 
@@ -60,7 +61,7 @@ VS Code will send a POST request to the embedded Quarkus app, which will perform
 
 ## Generating the vsix file
 
-Run `yarn run init && yarn run build:prod` if you want to generate the `vsix` file.
+Run `yarn bootstrap && yarn build:prod` if you want to generate the `vsix` file.
 
 Once the build process is done, the `vsix` file will be at `packages/vscode-extension/dist`.
 

@@ -1,4 +1,4 @@
-import { Capability, CapabilityResponse } from "@kogito-tooling/backend/dist/api";
+import { Capability, CapabilityResponse } from "@kie-tooling-core/backend/dist/api";
 import { TextDescriptor } from "../../model/text/TextDescriptor";
 
 export interface TextCapability extends Capability {

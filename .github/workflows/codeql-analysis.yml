@@ -4,9 +4,11 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
-  schedule:
-    - cron: '0 8 * * 5'
+    branches: "**"
+
+concurrency:
+  group: ${{ github.event.pull_request && format('codeql-pr-{0}', github.event.pull_request.number) || 'codeql-push-main' }}
+  cancel-in-progress: true
 
 jobs:
   analyze:
@@ -16,30 +18,29 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['java', 'javascript']
+        language: ["java", "javascript"]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
-      with:
-        languages: ${{ matrix.language }}
+      - name: "Setup environment"
+        uses: ./.github/actions/setup-env
 
-    - name: Autobuild
-      if: matrix.language == 'javascript'
-      uses: github/codeql-action/autobuild@v1
-    
-    - name: Set up JDK 11
-      if: matrix.language == 'java'
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    
-    - name: Build Java code
-      if: matrix.language == 'java'
-      run: mvn -B package --file packages/app-server/pom.xml
+      - name: "Initialize CodeQL"
+        uses: github/codeql-action/init@v1
+        with:
+          languages: ${{ matrix.language }}
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      - name: "Autobuild (JS)"
+        if: matrix.language == 'javascript'
+        uses: github/codeql-action/autobuild@v1
+
+      - name: "Build Java code"
+        if: matrix.language == 'java'
+        run: lerna run build:dev --scope=vscode-quarkus-djl-app-server --stream
+
+      - name: "Perform CodeQL Analysis"
+        uses: github/codeql-action/analyze@v1

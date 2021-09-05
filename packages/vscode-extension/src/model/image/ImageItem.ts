@@ -14,5 +14,5 @@ export interface ImageItem {
   /**
    * Bounding box associated with the class - only available for object detection.
    */
-  boundingBox: BoundingBox | undefined;
+  boundingBox?: BoundingBox;
 }

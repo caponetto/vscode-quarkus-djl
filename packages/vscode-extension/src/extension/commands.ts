@@ -1,4 +1,4 @@
-import { BackendProxy, CapabilityResponseStatus } from "@kogito-tooling/backend/dist/api";
+import { BackendProxy, CapabilityResponseStatus } from "@kie-tooling-core/backend/dist/api";
 import * as vscode from "vscode";
 import { ImageDescriptor } from "../model/image/ImageDescriptor";
 import { TextDescriptor } from "../model/text/TextDescriptor";
@@ -12,7 +12,7 @@ export async function runClassifyCommand(uri: vscode.Uri, backendProxy: BackendP
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Classifying ..."
+          title: "Classifying ...",
         },
         () => capability.classify(uri.fsPath)
       )
@@ -38,7 +38,7 @@ export async function runDetectCommand(uri: vscode.Uri, backendProxy: BackendPro
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Detecting objects ..."
+          title: "Detecting objects ...",
         },
         () => capability.detect(uri.fsPath)
       )
@@ -81,7 +81,7 @@ export async function runAutoCropCommand(uri: vscode.Uri, backendProxy: BackendP
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Auto cropping ..."
+          title: "Auto cropping ...",
         },
         () => capability.autoCrop(uri.fsPath)
       )
@@ -126,7 +126,7 @@ export async function runSentimentAnalysisCommand(text: string | undefined, back
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Analyzing ..."
+          title: "Analyzing ...",
         },
         () => capability.analyzeSentiment(text)
       )

@@ -1,4 +1,4 @@
-import { CapabilityResponse, LocalHttpService } from "@kogito-tooling/backend/dist/api";
+import { CapabilityResponse, LocalHttpService } from "@kie-tooling-core/backend/dist/api";
 import { ImageDescriptor } from "../../model/image/ImageDescriptor";
 import { ImageRequest } from "../../model/image/ImageRequest";
 import { AUTO_CROP_ENDPOINT, CLASSIFY_ENDPOINT, DETECT_ENDPOINT } from "../endpoints";
