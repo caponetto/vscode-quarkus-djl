@@ -17,10 +17,11 @@ Putting together [VS Code extension](https://code.visualstudio.com/api), [Quarku
 
 ## Requirements
 
-- [Maven](https://maven.apache.org/) 3.6.2+
-- [Java](https://openjdk.java.net/install/) 11+
-- [Node](https://nodejs.org/) LTS
-- [Yarn](https://yarnpkg.com/)
+- Node `16+`
+- Yarn `1.22.10` (`npm install -g yarn@1.22.10`)
+- Lerna `4.0.0` (`npm install -g lerna@4.0.0`)
+- Maven `3.6+`
+- Java `11`
 
 ## Available services
 
