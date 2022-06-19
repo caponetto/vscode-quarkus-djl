@@ -1,4 +1,4 @@
-import { Capability, CapabilityResponse } from "@kie-tooling-core/backend/dist/api";
+import { Capability, CapabilityResponse } from "@kie-tools-core/backend/dist/api";
 import { ImageDescriptor } from "../../model/image/ImageDescriptor";
 
 export interface ImageCapability extends Capability {

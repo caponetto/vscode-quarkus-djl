@@ -90,18 +90,25 @@
     "url": "https://github.com/caponetto/vscode-quarkus-dji.git"
   },
   "scripts": {
+    "lint": "yarn eslint ./src --ext .ts,.tsx",
     "pack:extension": "vsce package --yarn -o ./dist/image_services_vscode_extension_$npm_package_version.vsix --githubBranch main",
-    "build:dev": "rimraf dist && webpack --mode=development",
-    "build:prod": "rimraf dist && webpack --mode=production && yarn pack:extension"
+    "build:dev": "rimraf dist && webpack --mode development",
+    "build:prod": "yarn lint && rimraf dist && webpack --mode production && yarn pack:extension"
   },
   "dependencies": {
-    "@kie-tooling-core/backend": "0.12.0",
+    "@kie-tools-core/backend": "0.19.0"
+  },
+  "devDependencies": {
     "vscode-quarkus-djl-app-server": "0.0.0"
   },
   "babel": {
     "presets": [
-      "@babel/env",
-      "@babel/react"
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current"
+        }
+      }
     ]
   }
 }

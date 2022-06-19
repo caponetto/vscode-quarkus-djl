@@ -145,6 +145,7 @@ public class ImageServiceImpl implements ImageService {
                 .optApplication(Application.CV.OBJECT_DETECTION)
                 .setTypes(Image.class, DetectedObjects.class)
                 .optFilter(BACKBONE_KEY, RESNET_50_MODEL_NAME)
+                .optEngine(Engine.getDefaultEngineName())
                 .optProgress(new ProgressBar())
                 .build();
     }
