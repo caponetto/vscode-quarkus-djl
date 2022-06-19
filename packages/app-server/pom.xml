@@ -6,15 +6,20 @@
   <version>0.0.0</version>
   <properties>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
-    <djl.version>0.12.0</djl.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus-plugin.version>2.2.1.Final</quarkus-plugin.version>
-    <quarkus.platform.version>2.2.1.Final</quarkus.platform.version>
-    <surefire-plugin.version>2.22.1</surefire-plugin.version>
+    <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+    <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+    <quarkus.platform.version>2.9.2.Final</quarkus.platform.version>
+    <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
+    <version-djl.version>0.17.0</version-djl.version>
+    <org.apache.commons-commons-imaging.version>1.0-alpha3</org.apache.commons-commons-imaging.version>
+    <org.bytedeco-javacpp.version>1.5.7</org.bytedeco-javacpp.version>
+    <com.google.protobuf-protobuf-java.version>3.21.1</com.google.protobuf-protobuf-java.version>
+    <djl.version>0.17.0</djl.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -26,8 +31,8 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>io.quarkus</groupId>
-        <artifactId>quarkus-universe-bom</artifactId>
+        <groupId>${quarkus.platform.group-id}</groupId>
+        <artifactId>${quarkus.platform.artifact-id}</artifactId>
         <version>${quarkus.platform.version}</version>
         <type>pom</type>
         <scope>import</scope>
@@ -35,6 +40,22 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
+    <dependency>
+      <groupId>ai.djl.tensorflow</groupId>
+      <artifactId>tensorflow-engine</artifactId>
+      <version>${djl.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>ai.djl.pytorch</groupId>
+      <artifactId>pytorch-engine</artifactId>
+      <version>${djl.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>ai.djl</groupId>
+      <artifactId>api</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy</artifactId>
@@ -46,7 +67,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-imaging</artifactId>
-      <version>1.0-alpha1</version>
+      <version>${org.apache.commons-commons-imaging.version}</version>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -74,7 +95,7 @@
       <plugin>
         <groupId>io.quarkus</groupId>
         <artifactId>quarkus-maven-plugin</artifactId>
-        <version>${quarkus-plugin.version}</version>
+        <version>${quarkus.platform.version}</version>
         <executions>
           <execution>
             <goals>
@@ -107,15 +128,11 @@
       <dependencies>
         <dependency>
           <groupId>ai.djl.pytorch</groupId>
-          <artifactId>pytorch-model-zoo</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>ai.djl.pytorch</groupId>
           <artifactId>pytorch-engine</artifactId>
         </dependency>
         <dependency>
           <groupId>ai.djl.pytorch</groupId>
-          <artifactId>pytorch-native-auto</artifactId>
+          <artifactId>pytorch-model-zoo</artifactId>
         </dependency>
       </dependencies>
     </profile>
@@ -125,18 +142,18 @@
         <dependency>
           <groupId>org.bytedeco</groupId>
           <artifactId>javacpp</artifactId>
-          <version>1.5.4</version>
+          <version>${org.bytedeco-javacpp.version}</version>
         </dependency>
         <dependency>
           <groupId>org.bytedeco</groupId>
           <artifactId>javacpp</artifactId>
-          <version>1.5.4</version>
+          <version>${org.bytedeco-javacpp.version}</version>
           <classifier>macosx-x86_64</classifier>
         </dependency>
         <dependency>
           <groupId>com.google.protobuf</groupId>
           <artifactId>protobuf-java</artifactId>
-          <version>3.8.0</version>
+          <version>${com.google.protobuf-protobuf-java.version}</version>
         </dependency>
         <dependency>
           <groupId>ai.djl.tensorflow</groupId>
@@ -145,10 +162,6 @@
         <dependency>
           <groupId>ai.djl.tensorflow</groupId>
           <artifactId>tensorflow-model-zoo</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>ai.djl.tensorflow</groupId>
-          <artifactId>tensorflow-native-auto</artifactId>
         </dependency>
       </dependencies>
     </profile>

@@ -1,4 +1,4 @@
-import { Capability, CapabilityResponse } from "@kie-tooling-core/backend/dist/api";
+import { Capability, CapabilityResponse } from "@kie-tools-core/backend/dist/api";
 
 export interface ModelCapability extends Capability {
   /**

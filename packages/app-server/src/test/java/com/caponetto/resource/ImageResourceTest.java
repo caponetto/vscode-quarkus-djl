@@ -38,7 +38,7 @@ class ImageResourceTest extends BaseTest {
         final String filePath = getPathFromTestFile("cat.jpg");
         final ImageRequest imageRequest = new ImageRequest(filePath, 1, 50);
         final List<ImageItem> items = Stream.of(new ImageItem("tabby, tabby cat",
-                                                              57,
+                                                              52,
                                                               null)).collect(Collectors.toList());
         final ImageDescriptor imageDescriptor = new ImageDescriptor(filePath, items);
 

@@ -1,4 +1,4 @@
-import { BackendProxy, CapabilityResponseStatus } from "@kie-tooling-core/backend/dist/api";
+import { BackendProxy, CapabilityResponseStatus } from "@kie-tools-core/backend/dist/api";
 import * as vscode from "vscode";
 import { ImageDescriptor } from "../model/image/ImageDescriptor";
 import { TextDescriptor } from "../model/text/TextDescriptor";
@@ -6,7 +6,7 @@ import { IMAGE_SERVICE_ID, TEXT_SERVICE_ID } from "../service/ids";
 import { ImageCapability } from "../service/image/ImageCapability";
 import { TextCapability } from "../service/text/TextCapability";
 
-export async function runClassifyCommand(uri: vscode.Uri, backendProxy: BackendProxy) {
+export async function runClassifyCommand(uri: vscode.Uri, backendProxy: BackendProxy): Promise<void> {
   try {
     const response = await backendProxy.withCapability(IMAGE_SERVICE_ID, async (capability: ImageCapability) =>
       vscode.window.withProgress(
@@ -32,7 +32,7 @@ export async function runClassifyCommand(uri: vscode.Uri, backendProxy: BackendP
   }
 }
 
-export async function runDetectCommand(uri: vscode.Uri, backendProxy: BackendProxy) {
+export async function runDetectCommand(uri: vscode.Uri, backendProxy: BackendProxy): Promise<void> {
   try {
     const response = await backendProxy.withCapability(IMAGE_SERVICE_ID, async (capability: ImageCapability) =>
       vscode.window.withProgress(
@@ -75,7 +75,7 @@ export async function runDetectCommand(uri: vscode.Uri, backendProxy: BackendPro
   }
 }
 
-export async function runAutoCropCommand(uri: vscode.Uri, backendProxy: BackendProxy) {
+export async function runAutoCropCommand(uri: vscode.Uri, backendProxy: BackendProxy): Promise<void> {
   try {
     const response = await backendProxy.withCapability(IMAGE_SERVICE_ID, async (capability: ImageCapability) =>
       vscode.window.withProgress(
@@ -116,7 +116,7 @@ export async function runAutoCropCommand(uri: vscode.Uri, backendProxy: BackendP
   }
 }
 
-export async function runSentimentAnalysisCommand(text: string | undefined, backendProxy: BackendProxy) {
+export async function runSentimentAnalysisCommand(text: string | undefined, backendProxy: BackendProxy): Promise<void> {
   if (!text) {
     return;
   }
@@ -144,6 +144,6 @@ export async function runSentimentAnalysisCommand(text: string | undefined, back
   }
 }
 
-export async function setServerUp() {
+export async function setServerUp(): Promise<void> {
   await vscode.commands.executeCommand("setContext", "serverUp", true);
 }

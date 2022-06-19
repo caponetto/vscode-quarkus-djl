@@ -8,6 +8,7 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 
 import ai.djl.Application;
+import ai.djl.Device;
 import ai.djl.MalformedModelException;
 import ai.djl.inference.Predictor;
 import ai.djl.modality.Classifications;
@@ -54,6 +55,7 @@ public class TextServiceImpl implements TextService {
         return Criteria.builder()
                 .optApplication(Application.NLP.SENTIMENT_ANALYSIS)
                 .setTypes(String.class, Classifications.class)
+                .optDevice(Device.cpu())
                 .optProgress(new ProgressBar())
                 .build();
     }

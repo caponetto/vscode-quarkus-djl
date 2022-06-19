@@ -1,6 +1,6 @@
-import { BackendManagerService, BackendProxy, CapabilityResponseStatus } from "@kie-tooling-core/backend/dist/api";
-import { DefaultHttpBridge } from "@kie-tooling-core/backend/dist/http-bridge";
-import { QuarkusLocalServer } from "@kie-tooling-core/backend/dist/node";
+import { BackendManagerService, BackendProxy, CapabilityResponseStatus } from "@kie-tools-core/backend/dist/api";
+import { DefaultHttpBridge } from "@kie-tools-core/backend/dist/http-bridge";
+import { QuarkusLocalServer } from "@kie-tools-core/backend/dist/node";
 import * as path from "path";
 import * as vscode from "vscode";
 import { MODEL_SERVICE_ID } from "../service/ids";
