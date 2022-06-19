@@ -34,6 +34,13 @@
         "category": "Editor services"
       },
       {
+        "command": "extension.command.image.generate",
+        "title": "Generate Random Images",
+        "enablement": "serverUp",
+        "icon": "$(squirrel)",
+        "category": "Editor services"
+      },
+      {
         "command": "extension.command.text.sentiment",
         "title": "Sentiment Analysis",
         "enablement": "serverUp",
@@ -56,6 +63,10 @@
           "command": "extension.command.image.autocrop"
         },
         {
+          "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
+          "command": "extension.command.image.generate"
+        },
+        {
           "when": "resourceLangId == plaintext",
           "command": "extension.command.text.sentiment"
         }
@@ -74,6 +85,11 @@
         {
           "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
           "command": "extension.command.image.autocrop",
+          "group": "navigation"
+        },
+        {
+          "when": "resourceExtname =~ /.jpg|.jpeg|.png/",
+          "command": "extension.command.image.generate",
           "group": "navigation"
         },
         {

@@ -24,6 +24,12 @@ export async function runClassifyCommand(uri: vscode.Uri, backendProxy: BackendP
     }
 
     const imageDescriptor = response.body as ImageDescriptor;
+
+    if (imageDescriptor.items.length === 0) {
+      vscode.window.showWarningMessage("Cannot identify anything :(");
+      return;
+    }
+
     vscode.window.showInformationMessage(
       `Best match: ${imageDescriptor.items[0].className} (${imageDescriptor.items[0].probability}%)`
     );
@@ -109,6 +115,47 @@ export async function runAutoCropCommand(uri: vscode.Uri, backendProxy: BackendP
     }
 
     for (const path of croppedPaths) {
+      await vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(path), vscode.ViewColumn.Beside);
+    }
+  } catch (e) {
+    vscode.window.showErrorMessage(e);
+  }
+}
+
+export async function runGenerateRandomImagesCommand(uri: vscode.Uri, backendProxy: BackendProxy): Promise<void> {
+  try {
+    const response = await backendProxy.withCapability(IMAGE_SERVICE_ID, async (capability: ImageCapability) =>
+      vscode.window.withProgress(
+        {
+          location: vscode.ProgressLocation.Notification,
+          title: "Classifying and generating related random images ...",
+        },
+        () => capability.generateRandomImages(uri.fsPath)
+      )
+    );
+
+    if (response.status === CapabilityResponseStatus.NOT_AVAILABLE) {
+      vscode.window.showWarningMessage(response.message!);
+      return;
+    }
+
+    const imagePaths = response.body as string[];
+
+    if (imagePaths.length === 0) {
+      vscode.window.showWarningMessage("Cannot identify anything so no image has been generated :(");
+      return;
+    }
+
+    const selection = await vscode.window.showInformationMessage(
+      `${imagePaths.length} image(s) have been generated.`,
+      "See details"
+    );
+
+    if (!selection) {
+      return;
+    }
+
+    for (const path of imagePaths) {
       await vscode.commands.executeCommand("vscode.open", vscode.Uri.parse(path), vscode.ViewColumn.Beside);
     }
   } catch (e) {

@@ -23,7 +23,7 @@ Putting together [VS Code extension](https://code.visualstudio.com/api), [Quarku
 - Maven `3.6+`
 - Java `11`
 
-## Available services
+## Available services using DJL Model Zoo
 
 - **Image classification**
 <p align="center">
@@ -38,6 +38,11 @@ Putting together [VS Code extension](https://code.visualstudio.com/api), [Quarku
 - **Auto crop detected objects**
 <p align="center">
   <a href="documentation/demos/autocrop.gif"><img src="documentation/demos/autocrop.gif" width="500"></a>
+</p>
+
+- **Image generation with BigGAN**
+<p align="center">
+  <a href="documentation/demos/generate.gif"><img src="documentation/demos/generate.gif" width="500"></a>
 </p>
 
 - **Sentiment analysis**
