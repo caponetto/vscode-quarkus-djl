@@ -9,15 +9,19 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
+import ai.djl.modality.cv.Image;
 import ai.djl.util.RandomUtils;
 import com.caponetto.model.image.BoundingBox;
+import com.caponetto.model.image.ImageDescriptor;
 import com.caponetto.model.image.ImageItem;
 
 public class ImageUtils {
@@ -136,6 +140,30 @@ public class ImageUtils {
                 return null;
             }
         }).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    /**
+     * Save images generated from the descriptor.
+     *
+     * @param imageDescriptor Target image descriptor.
+     * @param images          Generated images.
+     * @return The list of paths of the output files.
+     */
+    public static List<Path> saveGeneratedCvImages(final ImageDescriptor imageDescriptor, final Image[] images) {
+        if (imageDescriptor.getItems().size() != images.length) {
+            throw new IllegalArgumentException("Mismatch number of images");
+        }
+        List<Path> paths = new ArrayList<>();
+        for (var i = 0; i < images.length; ++i) {
+            try {
+                final Path outputPath = File.createTempFile(imageDescriptor.getItems().get(i).getClassName().replace(" ", ""), TEMP_SUFFIX).toPath();
+                images[i].save(Files.newOutputStream(outputPath), "png");
+                paths.add(outputPath);
+            } catch (IOException e) {
+                // do nothing
+            }
+        }
+        return paths;
     }
 
     private static BoundingBox fixBoundaries(final BoundingBox original, final BufferedImage image) {

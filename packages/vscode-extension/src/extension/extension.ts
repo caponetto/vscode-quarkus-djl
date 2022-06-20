@@ -12,6 +12,7 @@ import {
   runAutoCropCommand,
   runClassifyCommand,
   runDetectCommand,
+  runGenerateRandomImagesCommand,
   runSentimentAnalysisCommand,
   setServerUp,
 } from "./commands";
@@ -19,6 +20,7 @@ import {
 const IMAGE_CLASSIFY_COMMAND = "extension.command.image.classify";
 const IMAGE_DETECT_COMMAND = "extension.command.image.detect";
 const AUTO_CROP_COMMAND = "extension.command.image.autocrop";
+const GENERATE_RANDOM_IMAGES_COMMAND = "extension.command.image.generate";
 const TEXT_SENTIMENT_COMMAND = "extension.command.text.sentiment";
 
 let backendProxy: BackendProxy;
@@ -40,6 +42,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     vscode.commands.registerCommand(IMAGE_CLASSIFY_COMMAND, (uri: vscode.Uri) => runClassifyCommand(uri, backendProxy)),
     vscode.commands.registerCommand(IMAGE_DETECT_COMMAND, (uri: vscode.Uri) => runDetectCommand(uri, backendProxy)),
     vscode.commands.registerCommand(AUTO_CROP_COMMAND, (uri: vscode.Uri) => runAutoCropCommand(uri, backendProxy)),
+    vscode.commands.registerCommand(GENERATE_RANDOM_IMAGES_COMMAND, (uri: vscode.Uri) =>
+      runGenerateRandomImagesCommand(uri, backendProxy)
+    ),
     vscode.commands.registerCommand(TEXT_SENTIMENT_COMMAND, () =>
       runSentimentAnalysisCommand(vscode.window.activeTextEditor?.document.getText(), backendProxy)
     )
@@ -70,7 +75,7 @@ async function loadModels() {
       vscode.window.withProgress(
         {
           location: vscode.ProgressLocation.Notification,
-          title: "Checking the models. It could take a while in the first usage.",
+          title: "Checking Machine Learning models. It could take a while in the first usage.",
         },
         () => capability.loadModels()
       )

@@ -27,6 +27,7 @@ public class ImageResource {
     public static final String CLASSIFY_PATH = "/classify";
     public static final String DETECT_PATH = "/detect";
     public static final String AUTO_CROP_PATH = "/autocrop";
+    public static final String GENERATE_RANDOM_IMAGES_PATH = "/generate";
 
     @Inject
     ImageService service;
@@ -81,6 +82,22 @@ public class ImageResource {
 
         try {
             return Response.ok(service.autoCrop(request.getPath(), request.getTopK(), request.getThreshold())).build();
+        } catch (TranslateException | IOException | ModelException e) {
+            return Response.serverError().build();
+        }
+    }
+
+    @POST
+    @Path(GENERATE_RANDOM_IMAGES_PATH)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response generateRandomImages(final ImageRequest request) {
+        if (!new File(request.getPath()).exists()) {
+            return Response.status(Status.BAD_REQUEST).build();
+        }
+
+        try {
+            return Response.ok(service.generateRandomImages(request.getPath(), request.getTopK(), request.getThreshold())).build();
         } catch (TranslateException | IOException | ModelException e) {
             return Response.serverError().build();
         }

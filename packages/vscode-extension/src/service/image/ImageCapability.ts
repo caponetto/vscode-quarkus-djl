@@ -22,4 +22,11 @@ export interface ImageCapability extends Capability {
    * @returns The list of paths of the output files.
    */
   autoCrop(path: string): Promise<CapabilityResponse<string[]>>;
+
+  /**
+   * Generate random images related to given image.
+   * @param path Absolute path of the image that should be related to the output images.
+   * @returns The list of paths of the output files.
+   */
+  generateRandomImages(path: string): Promise<CapabilityResponse<string[]>>;
 }

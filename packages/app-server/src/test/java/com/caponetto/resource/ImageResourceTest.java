@@ -30,7 +30,7 @@ class ImageResourceTest extends BaseTest {
                 .then()
                 .contentType(ContentType.JSON)
                 .statusCode(equalTo(Status.OK.getStatusCode()))
-                .body("size()", is(2));
+                .body("size()", is(3));
     }
 
     @Test
@@ -114,6 +114,33 @@ class ImageResourceTest extends BaseTest {
                 .contentType(ContentType.JSON)
                 .body(JsonObject.mapFrom(imageRequest).toString())
                 .post(ImageResource.BASE_PATH + ImageResource.AUTO_CROP_PATH)
+                .then()
+                .statusCode(equalTo(Status.BAD_REQUEST.getStatusCode()));
+    }
+
+    @Test
+    void testGenerateRandomImagesSuccess() {
+        final String filePath = getPathFromTestFile("cat.jpg");
+        final ImageRequest imageRequest = new ImageRequest(filePath, 1, 50);
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(JsonObject.mapFrom(imageRequest).toString())
+                .post(ImageResource.BASE_PATH + ImageResource.GENERATE_RANDOM_IMAGES_PATH)
+                .then()
+                .contentType(ContentType.JSON)
+                .statusCode(equalTo(Status.OK.getStatusCode()))
+                .body("size()", is(1));
+    }
+
+    @Test
+    void testGenerateRandomImagesInvalidPath() {
+        final ImageRequest imageRequest = new ImageRequest("an/invalid/path", 1, 50);
+
+        given()
+                .contentType(ContentType.JSON)
+                .body(JsonObject.mapFrom(imageRequest).toString())
+                .post(ImageResource.BASE_PATH + ImageResource.GENERATE_RANDOM_IMAGES_PATH)
                 .then()
                 .statusCode(equalTo(Status.BAD_REQUEST.getStatusCode()));
     }
