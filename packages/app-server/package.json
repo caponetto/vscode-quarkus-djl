@@ -9,6 +9,8 @@
   },
   "scripts": {
     "build:dev": "mvn clean package -B -nsu -DskipTests",
-    "build:prod": "mvn clean package -B -nsu"
+    "build:prod": "run-script-os",
+    "build:prod:linux": "mvn clean package -B -nsu",
+    "build:prod:win32:darwin": "mvn clean package -B -nsu -DskipTests"
   }
 }
