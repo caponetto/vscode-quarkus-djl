@@ -18,7 +18,7 @@
     <version-djl.version>0.17.0</version-djl.version>
     <org.apache.commons-commons-imaging.version>1.0-alpha3</org.apache.commons-commons-imaging.version>
     <org.bytedeco-javacpp.version>1.5.7</org.bytedeco-javacpp.version>
-    <com.google.protobuf-protobuf-java.version>3.21.1</com.google.protobuf-protobuf-java.version>
+    <com.google.protobuf-protobuf-java.version>3.21.7</com.google.protobuf-protobuf-java.version>
     <djl.version>0.17.0</djl.version>
   </properties>
   <dependencyManagement>
